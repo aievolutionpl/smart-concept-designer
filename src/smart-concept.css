@@ -1,0 +1,60 @@
+/* Silver identity on smoked architectural glass. */
+.weather-control{display:grid;grid-template-columns:1fr auto;gap:10px;margin:16px 0;color:#bcbec1;font-size:12px}.weather-control input{grid-column:1/-1}.weather-control output{color:#eee}.weather-select{display:grid;gap:8px;margin:14px 0;font-size:12px;color:#bcbec1}.weather-select select{background:#242527;color:#eee;border:1px solid var(--line);border-radius:5px;padding:8px;min-width:0}.day-presets{display:flex;gap:4px;justify-content:space-between;margin:12px 0}.day-presets button{font-size:11px;border-radius:4px;padding:6px;background:#ffffff08}.day-presets button[aria-pressed=true]{background:#ffffff26}.light-section{margin-top:12px}.light-section .section-title{font-size:13px}
+.catalog-tabs{display:flex;border-bottom:1px solid var(--line);margin-bottom:14px;gap:12px}
+.asset-card:has(.asset-source) .asset-image img{object-fit:contain;padding:8px;filter:none}
+.catalog-tabs button{font-size:13px;padding:9px 0;color:var(--muted);border-bottom:2px solid transparent}
+.catalog-tabs button[aria-selected=true]{color:white;border-color:#eee}
+.surface-target{display:grid;gap:8px;font-size:13px;margin:12px 0}
+.surface-target select{background:#252628;color:#eee;border:1px solid var(--line);padding:9px;border-radius:5px;min-width:0}
+.material-card{padding:12px;margin:12px 0}.material-card>img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px}.material-card h3{font-size:15px;margin:10px 0}.material-card p,.material-card a,.asset-source{font-size:11px;color:#bbb;line-height:1.6}.material-card a,.asset-source{display:block;text-decoration:underline}.material-card button{width:100%;margin-top:12px}.asset-info .asset-source{margin-top:6px}
+.workspace-controls{display:flex;align-items:center;gap:4px}
+.panel-dismiss{margin-left:auto;width:28px;height:28px;flex-shrink:0}
+.panel-heading .tiny-badge,.inspector>.panel-heading>svg{display:none}
+.panel-visible{color:#fff;background:#ffffff0b}
+.workspace-focus .panel,.workspace-focus .stage-heading,.workspace-focus .mobile-navigation{display:none!important}
+.workspace-focus .canvas-top{right:20px}
+.workspace-focus .compass{right:24px}
+@media(min-width:761px){.hide-left .library,.hide-right .inspector{display:none!important}.hide-left .stage-heading{left:24px}.hide-right .canvas-top{right:24px}.hide-right .compass{right:24px}.workspace-focus .tool-dock{left:50%}}
+@media(max-width:760px){.panel-dismiss{display:none}.tool-dock{gap:1px;padding:5px;max-width:calc(100vw - 20px)}.tool-dock .icon-button{width:29px;height:36px}.tool-dock .divider{margin:0 1px}.workspace-controls{gap:1px}.workspace-focus .tool-dock{bottom:60px}.workspace-focus .canvas-top{top:100px;right:14px}.workspace-focus .compass{bottom:120px}}
+:root{--ink:#f1f1f0;--muted:#b5b5b7;--accent:#e6e5e3;--glass:rgba(23,24,26,.82);--line:rgba(255,255,255,.14);--radius:8px;color:var(--ink);background:#242628}
+*{letter-spacing:0!important}
+.glass{background:linear-gradient(135deg,rgba(63,64,67,.5),rgba(19,20,22,.88));backdrop-filter:blur(28px) saturate(70%);-webkit-backdrop-filter:blur(28px) saturate(70%);border:1px solid var(--line);box-shadow:inset 0 1px 0 #ffffff0a,0 16px 40px #0003}
+.topbar{background:rgba(20,21,23,.84);border-radius:8px;gap:24px}
+.brand{width:237px;display:flex;flex-direction:column;align-items:flex-start;gap:3px;line-height:1}
+.brand img{display:block;width:184px;height:49px;object-fit:contain}
+.brand .brand-product{font:500 9px/1 'DM Sans',sans-serif;color:#d1d0d2;align-self:flex-start;margin-left:63px}
+.panel,.view-switch,.tool-dock,.mobile-nav,.button,.icon-button,.search,.asset-card,.import-button,.environment-options button{border-radius:8px}
+.button.primary,.icon-button.active,.add-asset{background:linear-gradient(#f0efed,#c5c4c5);color:#191a1c}
+.button.primary:hover{background:#fff;box-shadow:0 0 20px #ffffff15}
+.button.subtle{background:#ffffff05}
+.project-selector{color:#eee!important;background:#ffffff08!important;border-color:var(--line)!important;border-radius:4px}
+.project-selector option{background:#252628;color:#eee}
+.saved-state,.panel-heading,.section-title,.toggle-row,.property-row,.range-labels,.asset-info p,.asset-type,.selection-title p,.library-footer,.library-footer span,.navigation-hint,.statusbar,.view-switch button,.icon-button,.import-button small,.plot-fields label,.section-note,.scene-row small,.selection-title .eyebrow{color:var(--muted)}
+.stage-heading,.stage-heading h1{color:#f4f3f1;text-shadow:0 2px 16px #0007}
+.stage-heading h1{font-size:30px}
+.stage-heading p,.stage-heading .eyebrow{color:#bfc0bf}
+.eyebrow,.light-section output{color:#e0dfdc}
+.asset-card{background:#ffffff03;border-color:#ffffff12;box-shadow:none}
+.asset-card:hover{border-color:#ffffff40;background:#ffffff08}
+.asset-image{background:#858684}
+.asset-type,.tiny-badge{color:#dfdedd;background:#232426c9;border-color:#ffffff20}
+.asset-category{color:#b9b9bc;background:none}
+.search,.search input::placeholder{color:#b2b2b5}
+.search{background:#00000018}
+.tabs button{color:#a9aaad}
+.tabs button.active{color:#fff;border-color:#e5e4e2}
+.chip{color:#b9b9bc;background:transparent;border-color:#ffffff12}
+.chip.active,.environment-options button.active{color:#f6f5f3;background:#ffffff10;border-color:#ffffff40}
+.environment-options button{color:#b9b9bc}
+.view-switch button.active{color:#fff;background:#ffffff18}
+.icon-button:hover:not(:disabled){color:white;background:#ffffff14}
+.toggle-row input:checked{background:#ffffff35}
+.toggle-row input:before{background:#b6b5b8}
+.toggle-row input:checked:before{background:#efeeeb}
+.coordinate-fields input,.property-row input,.plot-fields input{color:#eee}
+.compass,.compass small{color:#d1d0d0}
+.statusbar{background:#141517d9;border-color:#ffffff12}
+#toast{background:#252628f5;color:#eee;border-color:#ffffff30;border-radius:8px}
+.loading{background:#191a1c;color:#eee}
+@media(max-width:1180px) and (min-width:761px){.brand{width:213px}.brand img{width:173px;height:46px}.stage-heading h1{font-size:25px}}
+@media(max-width:760px){.topbar{height:72px;padding:0 10px;gap:10px}.brand{width:118px;flex-shrink:0;gap:4px}.brand img{width:118px;height:32px}.brand .brand-product{font-size:8px;margin-left:40px}.project-heading{min-width:0}.project-selector{max-width:100%;font-size:10px}.project-heading input{font-size:11px}.top-actions{gap:5px}.top-actions .button{padding:9px}.stage-heading h1{font-size:27px}.mobile-nav{background:#1a1b1de8}.stage-heading .eyebrow{color:#bbb}.canvas-top .view-switch button{font-size:11px}}

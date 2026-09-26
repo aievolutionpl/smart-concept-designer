@@ -1,0 +1,78 @@
+async (page) => {
+  const errors=[];
+  const failed=[];
+  page.on('pageerror',error=>errors.push(error.message));
+  page.on('response',response=>{if(response.status()>=400)failed.push(response.url());});
+  await page.setViewportSize({width:1440,height:1000});
+  await page.goto('http://127.0.0.1:5173');
+  await page.waitForFunction(()=>window.formaDebug?.().ready&&document.querySelector('#loading').hidden);
+  await page.locator('#project-file').setInputFiles('test-results/nomad-preview.forma.json');
+  await page.waitForFunction(()=>window.formaDebug().state.instances.length===1&&window.formaDebug().state.instances[0].assetId==='nomad-sofa');
+  await page.getByRole('tab',{name:/Scena/}).click();
+  await page.locator('[data-select="nomad-preview"]').click();
+  await page.getByRole('button',{name:'Wycentruj widok',exact:true}).click();
+  await page.waitForTimeout(500);
+  const before=await page.locator('canvas').screenshot();
+  await page.screenshot({path:'test-results/nomad-desktop.png'});
+  await page.mouse.move(790,610);
+  await page.mouse.down();
+  await page.mouse.move(925,635,{steps:15});
+  await page.mouse.up();
+  await page.waitForTimeout(350);
+  const after=await page.locator('canvas').screenshot();
+  const pixels=await page.evaluate(async ([first,second])=>{
+    const sample=async data=>{
+      const image=new Image();image.src='data:image/png;base64,'+data;await image.decode();
+      const canvas=document.createElement('canvas');canvas.width=144;canvas.height=100;
+      const ctx=canvas.getContext('2d');ctx.drawImage(image,0,0,144,100);
+      return ctx.getImageData(0,0,144,100).data;
+    };
+    const a=await sample(first),b=await sample(second);let changed=0;const colors=new Set();
+    for(let i=0;i<a.length;i+=4){colors.add(`${a[i]>>3},${a[i+1]>>3},${a[i+2]>>3}`);if(Math.abs(a[i]-b[i])+Math.abs(a[i+1]-b[i+1])+Math.abs(a[i+2]-b[i+2])>15)changed++;}
+    return {colors:colors.size,changedPixels:changed};
+  },[before.toString('base64'),after.toString('base64')]);
+  if(pixels.colors<25||pixels.changedPixels<150)throw Error('Canvas is blank or orbit control did not move: '+JSON.stringify(pixels));
+  await page.getByLabel('Pozycja X',{exact:true}).fill('1.25');
+  await page.getByLabel('Pozycja X',{exact:true}).press('Tab');
+  await page.getByLabel('Obrót w stopniach',{exact:true}).fill('30');
+  await page.getByLabel('Obrót w stopniach',{exact:true}).press('Tab');
+  await page.waitForFunction(()=>window.formaDebug().state.instances[0].rotation===30);
+  await page.getByRole('tab',{name:'Assets',exact:true}).click();
+  await page.getByRole('button',{name:'Dodaj Nomad narożnik lewy',exact:true}).click();
+  await page.waitForFunction(()=>window.formaDebug().state.instances.length===2&&document.querySelector('#loading').hidden);
+  await page.getByRole('button',{name:'Wycentruj widok',exact:true}).click();
+  await page.screenshot({path:'test-results/nomad-chaise-desktop.png'});
+  await page.reload();
+  await page.waitForFunction(()=>window.formaDebug?.().ready&&document.querySelector('#loading').hidden);
+  const state=await page.evaluate(()=>window.formaDebug().state);
+  if(state.instances.length!==2||state.instances[0].x!==1.25||state.instances[0].rotation!==30)throw Error('Nomad persistence failed');
+  await page.goto('http://127.0.0.1:5173/?webgl=1');
+  await page.waitForFunction(()=>window.formaDebug?.().ready&&document.querySelector('#loading').hidden);
+  if(await page.locator('#render-backend').innerText()!=='WebGL')throw Error('WebGL fallback failed');
+  const mobile=await page.context().browser().newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+  mobile.on('pageerror',error=>errors.push(error.message));
+  await mobile.goto('http://127.0.0.1:5173');
+  await mobile.waitForFunction(()=>window.formaDebug?.().ready&&document.querySelector('#loading').hidden);
+  await mobile.locator('#mobile-assets').click();
+  await mobile.getByRole('button',{name:'Dodaj Nomad Sofa',exact:true}).click();
+  await mobile.waitForFunction(()=>window.formaDebug().state.instances.some(i=>i.assetId==='nomad-sofa')&&document.querySelector('#loading').hidden);
+  await mobile.getByRole('button',{name:'Wycentruj widok',exact:true}).click();
+  await mobile.waitForTimeout(500);
+  await mobile.screenshot({path:'test-results/nomad-mobile.png'});
+  const mobileCanvas=await mobile.locator('canvas').screenshot();
+  const mobileColors=await mobile.evaluate(async data=>{
+    const image=new Image();image.src='data:image/png;base64,'+data;await image.decode();
+    const canvas=document.createElement('canvas');canvas.width=78;canvas.height=168;
+    const ctx=canvas.getContext('2d');ctx.drawImage(image,0,0,78,168);
+    const pixels=ctx.getImageData(0,0,78,168).data,colors=new Set();
+    for(let i=0;i<pixels.length;i+=4)colors.add(`${pixels[i]>>3},${pixels[i+1]>>3},${pixels[i+2]>>3}`);
+    return colors.size;
+  },mobileCanvas.toString('base64'));
+  if(mobileColors<25)throw Error('Mobile canvas is blank');
+  await mobile.locator('#mobile-properties').click();
+  await mobile.screenshot({path:'test-results/nomad-mobile-properties.png'});
+  if(await mobile.evaluate(()=>document.documentElement.scrollWidth>innerWidth))throw Error('Mobile overflow');
+  await mobile.close();
+  if(errors.length||failed.length)throw Error(JSON.stringify({errors,failed}));
+  return {status:'PASS',checks:['add both Nomad models','focus','orbit pixel change','position and rotation','persistence','WebGL','390px mobile'],pixels,mobileColors,errors,failed};
+}

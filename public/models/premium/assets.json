@@ -1,0 +1,87 @@
+[
+  {
+    "id": "premium-lounger",
+    "name": "lounger",
+    "category": "Premium outdoor furniture",
+    "path": "/models/premium/premium-lounger.glb",
+    "preview": "/images/premium-lounger.png",
+    "triangles": 5112,
+    "dimensions": [
+      0.7960000038146973,
+      1.0763795184902847,
+      1.983541488647461
+    ],
+    "bytes": 509824,
+    "source": "Reconstruction from user supplied reference photo",
+    "license": "Project-specific reconstruction; reference image rights not verified",
+    "scale": "metres; estimated"
+  },
+  {
+    "id": "premium-sectional",
+    "name": "sectional",
+    "category": "Premium outdoor furniture",
+    "path": "/models/premium/premium-sectional.glb",
+    "preview": "/images/premium-sectional.png",
+    "triangles": 6600,
+    "dimensions": [
+      2.940000057220459,
+      0.8009559884667397,
+      2.3099999725818634
+    ],
+    "bytes": 651676,
+    "source": "Reconstruction from user supplied reference photo",
+    "license": "Project-specific reconstruction; reference image rights not verified",
+    "scale": "metres; estimated"
+  },
+  {
+    "id": "premium-table",
+    "name": "table",
+    "category": "Premium outdoor furniture",
+    "path": "/models/premium/premium-table.glb",
+    "preview": "/images/premium-sectional.png",
+    "triangles": 1800,
+    "dimensions": [
+      1.5,
+      0.7220000004768372,
+      0.8500000238418579
+    ],
+    "bytes": 187544,
+    "source": "Reconstruction from user supplied reference photo",
+    "license": "Project-specific reconstruction; reference image rights not verified",
+    "scale": "metres; estimated"
+  },
+  {
+    "id": "premium-stool",
+    "name": "stool",
+    "category": "Premium outdoor furniture",
+    "path": "/models/premium/premium-stool.glb",
+    "preview": "/images/premium-sectional.png",
+    "triangles": 600,
+    "dimensions": [
+      0.49000000953674316,
+      0.4500000011175871,
+      0.49000000953674316
+    ],
+    "bytes": 75676,
+    "source": "Reconstruction from user supplied reference photo",
+    "license": "Project-specific reconstruction; reference image rights not verified",
+    "scale": "metres; estimated"
+  },
+  {
+    "id": "premium-tub",
+    "name": "tub",
+    "category": "Premium outdoor furniture",
+    "path": "/models/premium/premium-tub.glb",
+    "preview": "/images/premium-tub.png",
+    "triangles": 22280,
+    "dimensions": [
+      1.9320000410079956,
+      1.0199999782443046,
+      2.596000015735626
+    ],
+    "bytes": 2151528,
+    "source": "Reconstruction from user supplied reference photo",
+    "license": "Project-specific reconstruction; reference image rights not verified",
+    "scale": "metres; estimated"
+  }
+]

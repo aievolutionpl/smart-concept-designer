@@ -1,0 +1,45 @@
+import {chromium} from '@playwright/test';
+import {writeFile,mkdir} from 'node:fs/promises';
+const browser=await chromium.launch({headless:true,channel:'chrome'});
+const page=await browser.newPage({viewport:{width:1600,height:1000}});
+const errors=[];page.on('pageerror',e=>errors.push(e.message));
+await page.goto('http://127.0.0.1:5173/?project=customer-garden-premium');
+await page.waitForFunction(()=>window.formaDebug?.().ready&&document.querySelector('#loading').hidden,{timeout:60000});
+await page.waitForTimeout(2000);
+await page.screenshot({path:'test-results/premium-desktop.png'});
+const state=await page.evaluate(()=>window.formaDebug());
+if(state.state.instances.length!==11)throw Error('Missing premium objects');
+await writeFile('test-results/Customer_Garden_Premium.forma.json',JSON.stringify(state.state,null,2));
+await page.getByRole('button',{name:'Dodaj Lezak Riviera',exact:true}).click();
+await page.waitForFunction(()=>window.formaDebug().state.instances.length===12&&document.querySelector('#loading').hidden);
+await page.getByRole('button',{name:'Usuń obiekt',exact:true}).click();
+await page.waitForFunction(()=>window.formaDebug().state.instances.length===11);
+await page.getByRole('button',{name:'Cofnij',exact:true}).click();
+await page.waitForFunction(()=>window.formaDebug().state.instances.length===12);
+await page.getByRole('button',{name:'Ponów',exact:true}).click();
+await page.waitForFunction(()=>window.formaDebug().state.instances.length===11);
+await page.getByRole('button',{name:'Z góry 2D',exact:true}).click();
+await page.waitForTimeout(500);await page.screenshot({path:'test-results/premium-plan.png'});
+await mkdir('public/models/premium',{recursive:true});
+const catalog=[];
+for(const id of ['premium-lounger','premium-sectional','premium-table','premium-stool','premium-tub']){
+ const result=await page.evaluate(async id=>{
+  const {createPremiumFurniture}=await import('/src/premium-furniture.js');
+  const {GLTFExporter}=await import('/node_modules/three/examples/jsm/exporters/GLTFExporter.js');
+  const T=await import('/node_modules/three/build/three.webgpu.js');
+  const model=createPremiumFurniture(id);let triangles=0;model.traverse(o=>{if(o.isMesh)triangles+=(o.geometry.index?.count||o.geometry.attributes.position.count)/3;});
+  const b=new T.Box3().setFromObject(model),size=b.getSize(new T.Vector3());
+  const buffer=await new GLTFExporter().parseAsync(model,{binary:true});
+  return {bytes:Array.from(new Uint8Array(buffer)),triangles,dimensions:size.toArray()};
+ },id);
+ await writeFile('public/models/premium/'+id+'.glb',Buffer.from(result.bytes));
+ catalog.push({id,name:id.replace('premium-',''),category:'Premium outdoor furniture',path:'/models/premium/'+id+'.glb',preview:'/images/premium-'+(id.includes('lounger')?'lounger':id.includes('tub')?'tub':'sectional')+'.png',triangles:result.triangles,dimensions:result.dimensions,bytes:result.bytes.length,source:'Reconstruction from user supplied reference photo',license:'Project-specific reconstruction; reference image rights not verified',scale:'metres; estimated'});
+}
+await writeFile('public/models/premium/assets.json',JSON.stringify(catalog,null,2));
+await page.getByRole('button',{name:'Ogród',exact:true}).click();
+await page.setViewportSize({width:390,height:844});await page.waitForTimeout(700);await page.screenshot({path:'test-results/premium-mobile.png'});
+await page.goto('http://127.0.0.1:5173/?project=customer-garden');await page.waitForFunction(()=>window.formaDebug?.().ready);
+if((await page.evaluate(()=>window.formaDebug().state.name))==='Customer Garden Premium')throw Error('Storage isolation failed');
+await browser.close();
+console.log(JSON.stringify({errors,triangles:state.triangles,drawCalls:state.drawCalls,catalog},null,2));
+if(errors.length)process.exitCode=1;

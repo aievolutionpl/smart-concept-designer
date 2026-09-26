@@ -1,0 +1,247 @@
+{
+  "version": 1,
+  "generatedAt": "2026-09-26T21:15:42.721Z",
+  "assets": [
+    {
+      "id": "ph-fern_02",
+      "name": "Paprocie leśne",
+      "kind": "model",
+      "category": "Rośliny",
+      "path": "/library/fern_02.glb",
+      "preview": "/library/fern_02.png",
+      "dimensions": {
+        "width": 1.973,
+        "height": 0.428,
+        "depth": 1.724,
+        "unit": "m"
+      },
+      "source": {
+        "provider": "Poly Haven",
+        "id": "fern_02",
+        "url": "https://polyhaven.com/a/fern_02",
+        "authors": {
+          "Rob Tuytel": "scanning",
+          "Rico Cilliers": "modeling"
+        }
+      },
+      "license": "CC0-1.0",
+      "licenseUrl": "https://polyhaven.com/license",
+      "triangles": 6232,
+      "originalTriangles": 6232,
+      "bytes": 1143468,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "bytes": 367222
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "bytes": 315705
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "bytes": 280359
+        }
+      ],
+      "vegetation": true,
+      "scale": {
+        "status": "source-metric",
+        "note": "glTF metres; dimensions measured from geometry; not independently surveyed",
+        "providerDimensionsMm": [
+          1972.5302457809448,
+          1724.0281701087952,
+          427.6947118341923
+        ]
+      },
+      "sha256": "5ab30bfe4ae944f17db56c3725e7c299fb8176501eb5e0ede6c5bac64a943999"
+    },
+    {
+      "id": "ph-planter_pot_clay",
+      "name": "Donica gliniana",
+      "kind": "model",
+      "category": "Donice",
+      "path": "/library/planter_pot_clay.glb",
+      "preview": "/library/planter_pot_clay.png",
+      "dimensions": {
+        "width": 0.266,
+        "height": 0.222,
+        "depth": 0.263,
+        "unit": "m"
+      },
+      "source": {
+        "provider": "Poly Haven",
+        "id": "planter_pot_clay",
+        "url": "https://polyhaven.com/a/planter_pot_clay",
+        "authors": {
+          "Amal Kumar": "All"
+        }
+      },
+      "license": "CC0-1.0",
+      "licenseUrl": "https://polyhaven.com/license",
+      "triangles": 3080,
+      "originalTriangles": 3080,
+      "bytes": 1796112,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "bytes": 506446
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "bytes": 596319
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "bytes": 613484
+        }
+      ],
+      "vegetation": false,
+      "scale": {
+        "status": "source-metric",
+        "note": "glTF metres; dimensions measured from geometry; not independently surveyed",
+        "providerDimensionsMm": [
+          265.9967243671417,
+          263.4630501270294,
+          221.87034250237048
+        ]
+      },
+      "sha256": "718c8043c667cd60da4991d5057c7caae2b8e1b3539ba5a3329bc1d54974d15a"
+    },
+    {
+      "id": "ph-rock_07",
+      "name": "Kamień naturalny",
+      "kind": "model",
+      "category": "Kamienie",
+      "path": "/library/rock_07.glb",
+      "preview": "/library/rock_07.png",
+      "dimensions": {
+        "width": 0.169,
+        "height": 0.144,
+        "depth": 0.32,
+        "unit": "m"
+      },
+      "source": {
+        "provider": "Poly Haven",
+        "id": "rock_07",
+        "url": "https://polyhaven.com/a/rock_07",
+        "authors": {
+          "Jenelle van Heerden": "All"
+        }
+      },
+      "license": "CC0-1.0",
+      "licenseUrl": "https://polyhaven.com/license",
+      "triangles": 10000,
+      "originalTriangles": 14844,
+      "bytes": 2036028,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "bytes": 766986
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "bytes": 635452
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "bytes": 309735
+        }
+      ],
+      "vegetation": false,
+      "scale": {
+        "status": "source-metric",
+        "note": "glTF metres; dimensions measured from geometry; not independently surveyed",
+        "providerDimensionsMm": [
+          169.10234838724136,
+          320.554181933403,
+          143.77418451476842
+        ]
+      },
+      "sha256": "f8b057edf43b38642e02e184b2e5b58f9a687cffbda2c875cb04b2662accbe19"
+    },
+    {
+      "id": "acg-WoodFloor051",
+      "name": "Deski drewniane",
+      "kind": "material",
+      "category": "Drewno",
+      "path": "/library/WoodFloor051-color.jpg",
+      "preview": "/library/WoodFloor051-color.jpg",
+      "maps": {
+        "color": "/library/WoodFloor051-color.jpg",
+        "normal": "/library/WoodFloor051-normal.jpg",
+        "roughness": "/library/WoodFloor051-roughness.jpg"
+      },
+      "dimensions": {
+        "width": 1.8,
+        "depth": 1.8,
+        "unit": "m"
+      },
+      "source": {
+        "provider": "ambientCG",
+        "id": "WoodFloor051",
+        "url": "https://ambientcg.com/a/WoodFloor051"
+      },
+      "license": "CC0-1.0",
+      "licenseUrl": "https://docs.ambientcg.com/license/",
+      "triangles": 0,
+      "bytes": 2286933,
+      "materials": 1,
+      "resolution": 1024,
+      "scale": {
+        "status": "provider",
+        "note": "Tile size from provider centimetres"
+      },
+      "targets": [
+        "deck"
+      ]
+    },
+    {
+      "id": "acg-PavingStones092",
+      "name": "Kostka kamienna",
+      "kind": "material",
+      "category": "Nawierzchnie",
+      "path": "/library/PavingStones092-color.jpg",
+      "preview": "/library/PavingStones092-color.jpg",
+      "maps": {
+        "color": "/library/PavingStones092-color.jpg",
+        "normal": "/library/PavingStones092-normal.jpg",
+        "roughness": "/library/PavingStones092-roughness.jpg"
+      },
+      "dimensions": {
+        "width": 1.55,
+        "depth": 1.55,
+        "unit": "m"
+      },
+      "source": {
+        "provider": "ambientCG",
+        "id": "PavingStones092",
+        "url": "https://ambientcg.com/a/PavingStones092"
+      },
+      "license": "CC0-1.0",
+      "licenseUrl": "https://docs.ambientcg.com/license/",
+      "triangles": 0,
+      "bytes": 4370018,
+      "materials": 1,
+      "resolution": 1024,
+      "scale": {
+        "status": "provider",
+        "note": "Tile size from provider centimetres"
+      },
+      "targets": [
+        "patio"
+      ]
+    }
+  ]
+}
