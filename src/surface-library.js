@@ -1,11 +1,12 @@
 import * as THREE from 'three/webgpu';
+import {publicUrl} from './public-url.js';
 
 export class SurfaceLibrary {
  constructor(){this.cache=new Map();this.loader=new THREE.TextureLoader();this.revision=0;this.originals=new WeakMap();}
  async material(asset){
   if(this.cache.has(asset.id))return this.cache.get(asset.id);
   const promise=(async()=>{
-   const textures=await Promise.all(['color','normal','roughness'].map(key=>this.loader.loadAsync(asset.maps[key])));
+   const textures=await Promise.all(['color','normal','roughness'].map(key=>this.loader.loadAsync(publicUrl(asset.maps[key]))));
    textures.forEach(t=>{t.wrapS=t.wrapT=THREE.RepeatWrapping;t.anisotropy=4;});textures[0].colorSpace=THREE.SRGBColorSpace;
    const material=new THREE.MeshStandardMaterial({name:asset.name,map:textures[0],normalMap:textures[1],roughnessMap:textures[2],roughness:1});
    return material;

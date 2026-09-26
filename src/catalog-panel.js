@@ -1,3 +1,4 @@
+import {publicUrl} from './public-url.js';
 export function mountCatalog(catalog,{apply,current,environment}){
  const content=document.querySelector('#assets-content');
  const nav=document.createElement('div');nav.className='catalog-tabs';nav.setAttribute('role','tablist');nav.setAttribute('aria-label','Rodzaj zasobów');
@@ -11,7 +12,7 @@ export function mountCatalog(catalog,{apply,current,environment}){
   const selection=current();cards.replaceChildren();
   for(const asset of catalog.filter(a=>a.kind==='material'&&a.targets.includes(target.value))){
    const card=document.createElement('article');card.className='asset-card material-card';
-   const img=document.createElement('img');img.src=asset.preview;img.alt=asset.name;img.loading='lazy';card.append(img);
+   const img=document.createElement('img');img.src=publicUrl(asset.preview);img.alt=asset.name;img.loading='lazy';card.append(img);
    const title=document.createElement('h3');title.textContent=asset.name;card.append(title);
    const details=document.createElement('p');details.textContent=`1K · ${asset.dimensions.width} × ${asset.dimensions.depth} m · ${(asset.bytes/1048576).toFixed(1)} MB`;card.append(details);
    const source=document.createElement('a');source.href=asset.source.url;source.target='_blank';source.rel='noopener';source.textContent=`${asset.source.provider} · CC0`;card.append(source);

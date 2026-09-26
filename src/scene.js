@@ -1,4 +1,5 @@
 import * as THREE from 'three/webgpu';
+import {publicUrl} from './public-url.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -71,7 +72,7 @@ export class GardenScene {
   if(this.cache.has(asset.id))return this.cache.get(asset.id);
   const promise=(async()=>{
     if(asset.procedural)return asset.id.startsWith('premium-')?createPremiumFurniture(asset.id):createFurniture(asset.id);
-   const gltf=asset.buffer?await this.loader.parseAsync(asset.buffer,''):await this.loader.loadAsync(asset.url);
+   const gltf=asset.buffer?await this.loader.parseAsync(asset.buffer,''):await this.loader.loadAsync(publicUrl(asset.url));
    const obj=gltf.scene,bounds=new THREE.Box3().setFromObject(obj);
    obj.position.y-=bounds.min.y;
    const wrapper=new THREE.Group();wrapper.add(obj);
