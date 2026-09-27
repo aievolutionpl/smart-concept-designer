@@ -47,8 +47,8 @@ export class GardenScene {
    if(!drag.moved){this.cb.beforeChange();drag.moved=true;}
    point.add(drag.offset);if(this.snap){point.x=Math.round(point.x*4)/4;point.z=Math.round(point.z*4)/4;}
    const size=new THREE.Box3().setFromObject(drag.object).getSize(new THREE.Vector3());
-   if(this.customer&&!this.canPlace(point.x,point.z,size.x/2,size.z/2))return;
-   drag.object.position.set(point.x,this.surfaceAt(point.x,point.z),point.z);this.selection?.update();this.cb.live(this.readTransforms());e.stopImmediatePropagation();
+   if(this.customer&&!drag.object.userData.importedEnvironment&&!this.canPlace(point.x,point.z,size.x/2,size.z/2))return;
+   drag.object.position.set(point.x,drag.object.userData.importedEnvironment?0:this.surfaceAt(point.x,point.z),point.z);this.selection?.update();this.cb.live(this.readTransforms());e.stopImmediatePropagation();
   },true);
   const endDrag=e=>{if(!this.drag||this.drag.id!==e.pointerId)return;const moved=this.drag.moved;this.drag=null;this.controls.enabled=true;if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);if(moved)this.cb.changed(this.readTransforms());e.stopImmediatePropagation();};
   canvas.addEventListener('pointerup',endDrag,true);canvas.addEventListener('pointercancel',endDrag,true);
@@ -63,7 +63,7 @@ export class GardenScene {
  async findPlacement(asset){
   if(!this.customer)return {x:2+(this.items.size%3)*.4,z:2};
   const template=await this.loadAsset(asset),size=new THREE.Box3().setFromObject(template).getSize(new THREE.Vector3());
-  const candidates=[];for(let z=-15;z<3;z+=.75)for(let x=-10;x<11;x+=.75){if(!this.canPlace(x,z,size.x/2+.15,size.z/2+.15))continue;const rect=new THREE.Box3(new THREE.Vector3(x-size.x/2,-.1,z-size.z/2),new THREE.Vector3(x+size.x/2,10,z+size.z/2));if([...this.items.values()].some(item=>rect.intersectsBox(new THREE.Box3().setFromObject(item).expandByScalar(.2))))continue;candidates.push({x,z,score:Math.hypot(x+4,z+2)+(this.surfaceAt(x,z)>0?0:4)});}
+  const candidates=[];for(let z=-15;z<3;z+=.75)for(let x=-10;x<11;x+=.75){if(!this.canPlace(x,z,size.x/2+.15,size.z/2+.15))continue;const rect=new THREE.Box3(new THREE.Vector3(x-size.x/2,-.1,z-size.z/2),new THREE.Vector3(x+size.x/2,10,z+size.z/2));if([...this.items.values()].some(item=>!item.userData.importedEnvironment&&rect.intersectsBox(new THREE.Box3().setFromObject(item).expandByScalar(.2))))continue;candidates.push({x,z,score:Math.hypot(x+4,z+2)+(this.surfaceAt(x,z)>0?0:4)});}
   candidates.sort((a,b)=>a.score-b.score);if(!candidates.length)throw Error('Brak wolnego miejsca. Przesuń lub usuń jeden z obiektów.');return candidates[0];
  }
  resize(){const w=this.container.clientWidth,h=this.container.clientHeight;if(!w||!h)return;this.camera.aspect=w/h;this.camera.updateProjectionMatrix();this.renderer.setSize(w,h);}
@@ -73,7 +73,7 @@ export class GardenScene {
   const promise=(async()=>{
     if(asset.procedural)return asset.id.startsWith('premium-')?createPremiumFurniture(asset.id):createFurniture(asset.id);
    const gltf=asset.buffer?await this.loader.parseAsync(asset.buffer,''):await this.loader.loadAsync(publicUrl(asset.url));
-   const obj=gltf.scene,bounds=new THREE.Box3().setFromObject(obj);
+   const obj=gltf.scene,bounds=new THREE.Box3().setFromObject(obj);if(asset.environment){if(bounds.isEmpty()||!Number.isFinite(bounds.min.x))throw Error('Environment nie zawiera geometrii.');let triangles=0;obj.traverse(o=>{if(o.isMesh)triangles+=(o.geometry.index?.count||o.geometry.attributes.position.count)/3*(o.isInstancedMesh?o.count:1);});if(triangles>1000000)throw Error('Environment przekracza limit 1 miliona trojkatow. Uprosc model.');const center=bounds.getCenter(new THREE.Vector3());obj.position.x-=center.x;obj.position.z-=center.z;}
    obj.position.y-=bounds.min.y;
    const wrapper=new THREE.Group();wrapper.add(obj);
    const materialsCache=new Map();
@@ -82,7 +82,7 @@ export class GardenScene {
     o.castShadow=true;o.receiveShadow=true;
     const sourceMaterials=Array.isArray(o.material)?o.material:[o.material];
     const mapped=sourceMaterials.map(m=>{
-     if(m.map)m.map.anisotropy=4;
+     if(m.map)m.map.anisotropy=4;if(asset.environment)return m;
      if(m.name.startsWith('Drewno'))m.color.set('#b18b5c');
      if(m.transmission>0||/glass/i.test(m.name)){
       o.castShadow=false;
@@ -105,8 +105,8 @@ export class GardenScene {
   this.cache.set(asset.id,promise);
   try{return await promise;}catch(e){this.cache.delete(asset.id);throw e;}
  }
- async add(instance,asset){const template=await this.loadAsset(asset);const obj=template.clone(true);obj.userData.instanceId=instance.id;if(asset.vegetation){this.vegetation.register(asset,template);obj.userData.vegetationAsset=asset.id;obj.visible=false;}this.scene.add(obj);this.items.set(instance.id,obj);this.update(instance);return obj;}
- update(i){const o=this.items.get(i.id);if(!o)return;o.position.set(i.x,this.surfaceAt(i.x,i.z),i.z);o.rotation.y=THREE.MathUtils.degToRad(i.rotation);o.scale.setScalar(i.scale);if(this.selection)this.selection.update();}
+ async add(instance,asset){const template=await this.loadAsset(asset);const obj=template.clone(true);obj.userData.instanceId=instance.id;obj.userData.importedEnvironment=!!asset.environment;if(asset.vegetation){this.vegetation.register(asset,template);obj.userData.vegetationAsset=asset.id;obj.visible=false;}this.scene.add(obj);this.items.set(instance.id,obj);this.update(instance);return obj;}
+ update(i){const o=this.items.get(i.id);if(!o)return;o.position.set(i.x,o.userData.importedEnvironment?0:this.surfaceAt(i.x,i.z),i.z);o.rotation.y=THREE.MathUtils.degToRad(i.rotation);o.scale.setScalar(i.scale);if(this.selection)this.selection.update();}
  remove(id){const obj=this.items.get(id);if(obj){if(this.selected===id)this.select(null);this.scene.remove(obj);this.items.delete(id);}}
  select(id){this.selected=id;this.transform.detach();if(this.selection){this.scene.remove(this.selection);this.selection.geometry.dispose();this.selection.material.dispose();this.selection=null;}const obj=this.items.get(id);if(obj){this.selection=new THREE.BoxHelper(obj,'#d0f9ad');this.selection.material.transparent=true;this.selection.material.opacity=.7;this.scene.add(this.selection);if(this.mode!=='select')this.transform.attach(obj);}this.setMode(this.mode??'select');}
  setMode(mode){this.mode=mode;this.transform.detach();const obj=this.items.get(this.selected);if(obj&&mode!=='select'){this.transform.setMode(mode);this.transform.showX=mode!=='rotate';this.transform.showY=mode!=='translate';this.transform.showZ=mode!=='rotate';this.transform.attach(obj);}}
@@ -156,7 +156,7 @@ export class GardenScene {
    for(const item of this.items.values())item.position.y=this.surfaceAt(item.position.x,item.position.z);
    this.cameraView('garden');return;
   }
-  this.controls.maxDistance=42;this.scene.fog.near=38;this.scene.fog.far=100;
+  this.controls.maxDistance=300;this.camera.far=1000;this.camera.updateProjectionMatrix();this.scene.fog.near=kind==='empty'?150:38;this.scene.fog.far=kind==='empty'?1000:100;
   const box=(w,h,d,color,x,y,z)=>{const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshStandardMaterial({color,roughness:.92}));o.position.set(x,y,z);o.receiveShadow=true;o.castShadow=true;this.environment.add(o);return o;};
   box(200,.1,200,kind==='studio'?'#9caaa8':'#647d72',0,-.25,0);
   box(width,.2,depth,kind==='garden'?'#5d8055':'#bac3be',0,-.12,0);
